@@ -1,5 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+w3_2/
+data/
 *.py[cod]
 *$py.class
 
