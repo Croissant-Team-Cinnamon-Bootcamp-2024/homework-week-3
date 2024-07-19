@@ -1,5 +1,5 @@
-import roboflow
+import json 
 
-roboflow.login()
-
-roboflow.download_dataset(dataset_url="https://universe.roboflow.com/team-roboflow/coco-128/dataset/2", model_format="coco", location="data/coco-128")
+dataset_file_path = "data/image_paths.json"
+with open(dataset_file_path, 'r') as file:
+    data = json.load(file)

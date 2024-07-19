@@ -2,6 +2,7 @@
 __pycache__/
 w3_2/
 data/
+uploads/
 *.py[cod]
 *$py.class
 

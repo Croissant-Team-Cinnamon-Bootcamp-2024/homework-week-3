@@ -1,4 +1,3 @@
-
 import os
 import io
 import uuid
@@ -8,6 +7,12 @@ from fastapi.staticfiles import StaticFiles
 from PIL import Image
 import numpy as np
 from typing import List
+# import json 
+
+# dataset_file_path = "data/image_paths.json"
+# with open(dataset_file_path, 'r') as file:
+#     data = json.load(file)
+
 
 app = FastAPI()
 
@@ -16,6 +21,14 @@ UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+# app.mount("/data", StaticFiles(directory="data"), name="data")
+"""
+The issue you're experiencing is related to how FastAPI serves static files and the location of your image files. The 404 Not Found errors indicate that FastAPI can't find the images you're trying to display. Let's address this problem:
+
+File Location: Your similar images are located in the "/data/coco-128/train/" directory, which is not mounted or accessible through FastAPI's static file serving.
+Static File Serving: You've only mounted the "uploads" directory for static file serving.
+"""
+app.mount("/dataset", StaticFiles(directory="dataset"), name="dataset")
 
 def get_to_Embedding_vector(byte_image: bytes) -> np.ndarray:
     # Dummy implementation
@@ -74,8 +87,11 @@ async def create_upload_files(files: List[UploadFile]):
         response_content += f'<h3>Similar Images:</h3>'
         for index in search_results[i]:
             # Here, you should replace this with actual similar image URLs from your database
-            similar_image_url = f"/uploads/similar_image_{index}.jpg"
-            response_content += f'<img src="{similar_image_url}" alt="Similar Image" style="width:100px;height:auto;">'
+            # similar_image_url = f"/data/similar_image_{index}.jpg"
+            # similar_image_url = "/"+data[index]
+            similar_image_url = f"/dataset/{index}.jpg"
+            print(similar_image_url)
+            response_content += f'<img src="{similar_image_url}" alt="Similar Image" style="width:200px;height:auto;">'
         response_content += "<hr>"
     response_content += "</body></html>"
 
