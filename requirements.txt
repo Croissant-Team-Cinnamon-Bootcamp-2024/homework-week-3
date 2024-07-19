@@ -1,0 +1,3 @@
+wget
+fastapi
+numpy
