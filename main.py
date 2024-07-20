@@ -38,14 +38,6 @@ def search(embedded_vector: np.ndarray) -> np.ndarray:
     # Dummy implementation
     return np.random.randint(0, 100, 5)  # Example results, replace with your actual implementation
 
-# def get_to_Embedding_vectors(byte_image: bytes) -> List[np.ndarray]:
-#     # Dummy implementation
-#     return [np.random.rand(128)]  # Example list of embeded vector 
-
-# def search(embedded_vectors: List[np.ndarray]) -> List[np.ndarray]:
-#     # Dummy implementation
-#     return [np.random.randint(0, 100, 5)]  # Example list of results
-
 async def search_images(files: List[UploadFile]):
     """
     Find similar images in database
@@ -86,9 +78,6 @@ async def create_upload_files(files: List[UploadFile]):
         response_content += f'<img src="{file_url}" alt="Uploaded Image" style="width:200px;height:auto;">'
         response_content += f'<h3>Similar Images:</h3>'
         for index in search_results[i]:
-            # Here, you should replace this with actual similar image URLs from your database
-            # similar_image_url = f"/data/similar_image_{index}.jpg"
-            # similar_image_url = "/"+data[index]
             similar_image_url = f"/dataset/{index}.jpg"
             print(similar_image_url)
             response_content += f'<img src="{similar_image_url}" alt="Similar Image" style="width:200px;height:auto;">'
