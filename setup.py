@@ -1,10 +1,7 @@
 from setuptools import find_packages, setup
 
-
-def parse_requirements(filename):
-    with open(filename, 'r') as f:
-        return [line.strip() for line in f if line.strip() and not line.startswith('#')]
-
+with open("requirements.txt") as f:
+    required = f.read().splitlines()
 
 setup(
     name="image_search",
@@ -13,5 +10,5 @@ setup(
     author="Croissant Team",
     packages=find_packages("app"),
     package_dir={"": "app"},
-    install_requires=parse_requirements('requirements.txt'),
+    install_requires=required,
 )
