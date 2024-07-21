@@ -20,25 +20,29 @@ app = FastAPI(title="embedding API")
 
 
 class ImageURL(BaseModel):
-    url: str
+    url: str =None
 
 class EmbeddingResponse(BaseModel):
-    embeddings: List[np.ndarray]
+    embeddings: List[List[float]]
     class Config:
         arbitrary_types_allowed = True
 
 @app.post("/embed-image/", response_model=EmbeddingResponse)
-async def embed_image(image_url: ImageURL):
+async def embed_image(image_url: ImageURL = ImageURL()):
+    # image_url.url = 'https://cdn.tuoitre.vn/thumb_w/730/471584752817336320/2024/4/7/thu-y-read-only-1712454975600469786440.jpg'
     try:
         # Fetch the image from the provided URL
         response = requests.get(image_url.url)
+        print("get_success")
         image = Image.open(io.BytesIO(response.content))
-        
+        # image.show()
         # Create a QueryImage object
         query_images = QueryImage([image])
         
         # Get the embedding
         embeddings = get_image_embeddings(query_images)
+        embeddings[0]=embeddings[0].reshape(-1).tolist()
+        print(embeddings)
         
         return EmbeddingResponse(embeddings=embeddings)
     except Exception as e:
@@ -62,3 +66,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # print(embed_image())
