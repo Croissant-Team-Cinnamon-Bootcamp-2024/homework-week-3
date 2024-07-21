@@ -1,7 +1,16 @@
-fastapi
-uvicorn
-requests
-Pillow
-numpy
-torch
-clip
+# fastapi
+# uvicorn
+# requests
+# Pillow
+# numpy
+# torch
+# clip
+fastapi==0.95.1
+uvicorn==0.22.0
+requests==2.30.0
+Pillow==9.5.0
+numpy==1.24.3
+torch==2.0.1+cpu
+torchvision==0.15.2+cpu
+torchaudio==2.0.2+cpu
+git+https://github.com/openai/CLIP.git

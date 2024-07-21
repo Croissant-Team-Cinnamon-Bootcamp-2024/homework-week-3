@@ -4,7 +4,7 @@ import clip
 import numpy as np
 import torch
 
-from .queryimage import QueryImage
+from queryimage import QueryImage
 
 
 def get_image_embeddings(
