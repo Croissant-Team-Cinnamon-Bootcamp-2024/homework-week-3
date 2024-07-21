@@ -30,7 +30,7 @@ class FaissHelper:
 
 if __name__ == "__main__":
     query = np.random.rand(3, 512)
-    
+
     index_path = "/shared/data/hw3/index.faiss"
     faiss_helper = FaissHelper(index_path)
     # Get similar images
