@@ -1,16 +1,12 @@
 import os
 
-
 # import torch
 import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-
-
-from utils import FaissHelper
 from schemas import QueryEmbeddings
-
+from utils import FaissHelper
 
 load_dotenv()
 app = FastAPI(title="faiss search api")
@@ -44,8 +40,8 @@ def main():
     # Run web server with uvicorn
     uvicorn.run(
         "main:app",
-        host=os.getenv("FASTAPI_HOST", "127.0.0.1"),
-        port=int(os.getenv("FASTAPI_PORT", 8000)),
+        host=os.getenv("SEARCH_FASTAPI_HOST", "127.0.0.1"),
+        port=int(os.getenv("SEARCH_FASTAPI_PORT", 8001)),
         # reload=True,  # Uncomment this for debug
         workers=2,
     )

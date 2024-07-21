@@ -1,11 +1,7 @@
 import json
-import os
 
 import numpy as np
 import requests
-from dotenv import load_dotenv
-
-load_dotenv()
 
 
 def load_image_path(save_path):
@@ -28,9 +24,9 @@ def get_embeddings(byte_image: bytes) -> np.ndarray:
 #     )  # Example results, replace with your actual implementation
 
 
-def search(embedded_vector: np.ndarray) -> np.ndarray:
+def search(url, embedded_vector: np.ndarray) -> np.ndarray:
     r = requests.post(
-        f'{os.getenv("SEARCH_API_HOST")}:{os.getenv("SEARCH_API_PORT")}/search',
+        url,
         json={
             "embeddings": embedded_vector.tolist(),
         },
@@ -38,7 +34,7 @@ def search(embedded_vector: np.ndarray) -> np.ndarray:
     return r.json()
 
 
-async def search_images(files):
+async def search_images(search_url, files):
     """
     Find similar images in database
 
@@ -49,5 +45,5 @@ async def search_images(files):
     """
     # byte_image = await file.read()
     embedded_vector = get_embeddings(files)
-    results = search(embedded_vector)
+    results = search(search_url, embedded_vector)
     return results

@@ -10,8 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from utils import load_image_path, search_images
 
 load_dotenv()
+SEARCH_URL = f'{os.getenv("SEARCH_API_URL")}/search'
 data = load_image_path(os.getenv("IMAGES_PATH_FILE"))
-
 app = FastAPI()
 
 # Create a directory to store uploaded files
@@ -22,7 +22,7 @@ app.mount("/data", StaticFiles(directory="data"), name="data")
 
 @app.post("/uploadfiles/")
 async def create_upload_files(files: List[UploadFile]):
-    search_results = await search_images(files)
+    search_results = await search_images(SEARCH_URL, files)
     saved_file_urls = []
 
     for file in files:
@@ -69,8 +69,8 @@ def main():
     # Run web server with uvicorn
     uvicorn.run(
         "main:app",
-        host=os.getenv("FASTAPI_HOST", "127.0.0.1"),
-        port=int(os.getenv("FASTAPI_PORT", 8000)),
+        host=os.getenv("AGG_FASTAPI_HOST", "127.0.0.1"),
+        port=int(os.getenv("AGG_FASTAPI_PORT", 8000)),
         # reload=True,  # Uncomment this for debug
         workers=2,
     )
