@@ -24,6 +24,8 @@ class ImageURL(BaseModel):
 
 class EmbeddingResponse(BaseModel):
     embeddings: List[np.ndarray]
+    class Config:
+        arbitrary_types_allowed = True
 
 @app.post("/embed-image/", response_model=EmbeddingResponse)
 async def embed_image(image_url: ImageURL):
