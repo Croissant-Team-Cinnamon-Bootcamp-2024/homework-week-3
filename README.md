@@ -34,7 +34,7 @@ The project consists of three main API services:
 
 - Multi-image input support
 - Top-5 similar images returned for each input image
-- Containerized microservices architecture
+- Containerized services
 - Deployed on AWS
 
 ## Technologies Used
