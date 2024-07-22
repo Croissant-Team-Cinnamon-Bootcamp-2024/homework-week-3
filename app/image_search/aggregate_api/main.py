@@ -10,10 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from utils import load_image_path, search_images
 
 load_dotenv()
-# SEARCH_API_URL = f'{os.getenv("SEARCH_API_URL")}/search'
-SEARCH_API_URL = 'http://localhost:8001/search'
-# EMBEDDING_API_URL = f'{os.getenv("SEARCH_API_URL")}/search'
-EMBEDDING_API_URL = 'http://localhost:8002/embed-image'
+SEARCH_API_URL = f'{os.getenv("SEARCH_API_URL")}/search'
+EMBEDDING_API_URL = f'{os.getenv("EMBEDDING_API_URL")}/embed-image'
 data = load_image_path(os.getenv("IMAGES_PATH_FILE"))
 app = FastAPI()
 

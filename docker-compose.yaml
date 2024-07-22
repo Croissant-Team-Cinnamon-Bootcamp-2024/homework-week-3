@@ -9,12 +9,12 @@ services:
       - ${AGG_FASTAPI_PORT}:${AGG_FASTAPI_PORT}
     environment:
       - SEARCH_API_URL=http://search_api:${SEARCH_FASTAPI_PORT}
-      - EMBEDDING_API_URL=http://search_api:${SEARCH_FASTAPI_PORT}
+      - EMBEDDING_API_URL=http://embedding_api:${EMBEDDING_FASTAPI_PORT}
     volumes:
       - ./data:/workspace/data
     depends_on:
       - "search_api"
-      # - "embedding_api"
+      - "embedding_api"
 
   search_api:
     container_name: search_api
@@ -25,19 +25,14 @@ services:
       - .env
     volumes:
       - ./data:/workspace/data
-    # environment:
-    #   - FASTAPI_HOST="0.0.0.0"
-    #   - FASTAPI_PORT=8001
-    #   - INDEX_SAVE_PATH=data/index.faiss
-    # embedding_api:
-    #   container_name: embedding_api
-    #   image: nvcr.io/nvidia/tritonserver:23.12-py3
-    #   ports:
-    #     - "8000:8000"
-    #   volumes:
-    #     - ./deploy/music_embedding/model_repository:/models
-    #   command: tritonserver --model-repository=/models
 
+  embedding_api:
+    container_name: embedding_api
+    build: ./app/image_search/embedding_api
+    ports:
+      - ${EMBEDDING_FASTAPI_PORT}:${EMBEDDING_FASTAPI_PORT}
+    env_file:
+      - .env
 
 networks:
   default:
