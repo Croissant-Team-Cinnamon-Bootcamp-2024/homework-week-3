@@ -1,7 +1,8 @@
 import json
+from typing import List
 
-import numpy as np
 import requests
+from fastapi import UploadFile
 
 
 def load_image_path(save_path):
@@ -10,31 +11,33 @@ def load_image_path(save_path):
     return data
 
 
-def get_embeddings(byte_image: bytes) -> np.ndarray:
-    # Dummy implementation
-    return np.random.rand(
-        len(byte_image), 512
-    )  # Example vector size, replace with your actual implementation
+def get_embeddings(url, images: List[UploadFile]) -> List[List[float]]:
+    files = []
+    for image in images:
+        contents = image.file.read()
+        files.append(("files", contents))
+
+    r = requests.post(url, files=files)
+
+    if r.status_code != 200:
+        raise Exception("Failed to send request to Embedding API")
+
+    return r.json()["embeddings"]
 
 
-# def search(embedded_vector: np.ndarray) -> np.ndarray:
-#     # Dummy implementation
-#     return np.random.randint(
-#         0, 100, (len(embedded_vector), 5)
-#     )  # Example results, replace with your actual implementation
-
-
-def search(url, embedded_vector: np.ndarray) -> np.ndarray:
+def search(url, embedded_vector: List[List[float]]) -> List[List[int]]:
     r = requests.post(
         url,
         json={
-            "embeddings": embedded_vector.tolist(),
+            "embeddings": embedded_vector,
         },
     )
+    if r.status_code != 200:
+        raise Exception("Failed to send request to Search API")
     return r.json()
 
 
-async def search_images(search_url, files):
+async def search_images(embedding_url, search_url, files):
     """
     Find similar images in database
 
@@ -44,6 +47,6 @@ async def search_images(search_url, files):
         List[List[int]]: List of lists of indexes of similar images
     """
     # byte_image = await file.read()
-    embedded_vector = get_embeddings(files)
+    embedded_vector = get_embeddings(embedding_url, files)
     results = search(search_url, embedded_vector)
     return results

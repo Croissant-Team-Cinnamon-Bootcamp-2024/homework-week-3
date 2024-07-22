@@ -6,16 +6,12 @@ import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, UploadFile
 from PIL import Image
-from pydantic import BaseModel
+from schemas import EmbeddingResponse
 from utils.embedding import get_image_embeddings
 from utils.queryimage import QueryImage
 
 load_dotenv()
 app = FastAPI(title="embedding API")
-
-
-class EmbeddingResponse(BaseModel):
-    embeddings: List[List[float]]
 
 
 @app.post("/embed-image/", response_model=EmbeddingResponse)
@@ -48,7 +44,7 @@ def main():
         host=os.getenv("EMBEDDING_FASTAPI_HOST", "127.0.0.1"),
         port=int(os.getenv("EMBEDDING_FASTAPI_PORT", 8002)),
         # reload=True,  # Uncomment this for debug
-        workers=2,
+        # workers=2,
     )
 
 

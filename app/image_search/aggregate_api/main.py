@@ -10,7 +10,10 @@ from fastapi.staticfiles import StaticFiles
 from utils import load_image_path, search_images
 
 load_dotenv()
-SEARCH_URL = f'{os.getenv("SEARCH_API_URL")}/search'
+# SEARCH_API_URL = f'{os.getenv("SEARCH_API_URL")}/search'
+SEARCH_API_URL = 'http://localhost:8001/search'
+# EMBEDDING_API_URL = f'{os.getenv("SEARCH_API_URL")}/search'
+EMBEDDING_API_URL = 'http://localhost:8002/embed-image'
 data = load_image_path(os.getenv("IMAGES_PATH_FILE"))
 app = FastAPI()
 
@@ -22,7 +25,7 @@ app.mount("/data", StaticFiles(directory="data"), name="data")
 
 @app.post("/uploadfiles/")
 async def create_upload_files(files: List[UploadFile]):
-    search_results = await search_images(SEARCH_URL, files)
+    search_results = await search_images(EMBEDDING_API_URL, SEARCH_API_URL, files)
     saved_file_urls = []
 
     for file in files:

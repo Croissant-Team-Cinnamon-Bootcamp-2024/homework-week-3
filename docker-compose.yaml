@@ -9,6 +9,7 @@ services:
       - ${AGG_FASTAPI_PORT}:${AGG_FASTAPI_PORT}
     environment:
       - SEARCH_API_URL=http://search_api:${SEARCH_FASTAPI_PORT}
+      - EMBEDDING_API_URL=http://search_api:${SEARCH_FASTAPI_PORT}
     volumes:
       - ./data:/workspace/data
     depends_on:
