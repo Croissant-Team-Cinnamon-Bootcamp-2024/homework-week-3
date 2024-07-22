@@ -1,0 +1,39 @@
+services:
+
+  aggregate_api:
+    container_name: aggregate_api
+    build: ./app/image_search/aggregate_api
+    env_file:
+      - .env
+    ports:
+      - ${AGG_FASTAPI_PORT}:${AGG_FASTAPI_PORT}
+    environment:
+      - SEARCH_API_URL=http://search_api:${SEARCH_FASTAPI_PORT}
+      - EMBEDDING_API_URL=http://embedding_api:${EMBEDDING_FASTAPI_PORT}
+    volumes:
+      - ./data:/workspace/data
+    depends_on:
+      - "search_api"
+      - "embedding_api"
+
+  search_api:
+    container_name: search_api
+    build: ./app/image_search/search_api
+    ports:
+      - ${SEARCH_FASTAPI_PORT}:${SEARCH_FASTAPI_PORT}
+    env_file:
+      - .env
+    volumes:
+      - ./data:/workspace/data
+
+  embedding_api:
+    container_name: embedding_api
+    build: ./app/image_search/embedding_api
+    ports:
+      - ${EMBEDDING_FASTAPI_PORT}:${EMBEDDING_FASTAPI_PORT}
+    env_file:
+      - .env
+
+networks:
+  default:
+    name: image-search
