@@ -48,7 +48,7 @@ The project consists of three main API services:
 
 - **Input**: List of images (BytesIO format)
 - **Output**: List of embedding vectors (numpy arrays)
-- **Endpoint**: `/embed`
+- **Endpoint**: `/embed-image`
 
 ### 2. Search API
 
@@ -60,7 +60,7 @@ The project consists of three main API services:
 
 - **Input**: One or more images
 - **Output**: Top 5 most similar images for each input image
-- **Endpoint**: `/search_images`
+- **Endpoint**: `/uploadfiles`
 
 ## Deployment
 
