@@ -9,12 +9,17 @@ services:
       - ${AGG_FASTAPI_PORT}:${AGG_FASTAPI_PORT}
     environment:
       - SEARCH_API_URL=http://search_api:${SEARCH_FASTAPI_PORT}
-      - EMBEDDING_API_URL=http://embedding_api:${EMBEDDING_FASTAPI_PORT}
+      - EMBEDDING_API_URL=http://embedding_proxy:${EMBEDDING_PROXY_PORT}
     volumes:
       - ./data:/workspace/data
     depends_on:
       - "search_api"
-      - "embedding_api"
+      - "embedding_proxy"
+    command: ["python", "main.py"]
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
   search_api:
     container_name: search_api
@@ -25,15 +30,57 @@ services:
       - .env
     volumes:
       - ./data:/workspace/data
+    deploy:
+      resources:
+        limits:
+          memory: 2G
 
-  embedding_api:
-    container_name: embedding_api
-    build: ./app/image_search/embedding_api
+  embedding_proxy:
+    image: haproxytech/haproxy-alpine:2.4
+    container_name: embedding_proxy
     ports:
-      - ${EMBEDDING_FASTAPI_PORT}:${EMBEDDING_FASTAPI_PORT}
+      - ${EMBEDDING_PROXY_PORT}:${EMBEDDING_PROXY_PORT}
+    volumes:
+      - ./app/image_search/embedding_proxy:/usr/local/etc/haproxy:ro
     env_file:
       - .env
+    deploy:
+      resources:
+        limits:
+          memory: 2G
 
+  embedding_api-1:
+    container_name: embedding_api-1
+    build: ./app/image_search/embedding_api
+    env_file:
+      - .env
+    environment:
+      - EMBEDDING_FASTAPI_HOST=${EMBEDDING_FASTAPI_HOST_1}
+      - EMBEDDING_FASTAPI_PORT=${EMBEDDING_FASTAPI_PORT_1}
+    ports:
+      - ${EMBEDDING_FASTAPI_PORT_1}:${EMBEDDING_FASTAPI_PORT_1}
+    command: ["python", "main.py"]
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+  embedding_api-2:
+    container_name: embedding_api-2
+    build: ./app/image_search/embedding_api
+    env_file:
+      - .env
+    environment:
+      - EMBEDDING_FASTAPI_HOST=${EMBEDDING_FASTAPI_HOST_2}
+      - EMBEDDING_FASTAPI_PORT=${EMBEDDING_FASTAPI_PORT_2}
+    ports:
+      - ${EMBEDDING_FASTAPI_PORT_2}:${EMBEDDING_FASTAPI_PORT_2}
+    command: ["python", "main.py"]
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+    
 networks:
   default:
     name: image-search
